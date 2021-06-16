@@ -1,39 +1,59 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, FlatList } from "react-native";
 import { Navbar } from "./src/Navbar";
 import { AddTodo } from "./src/AddTodo";
+import { Todo } from "./src/Todo";
 
 export default function App() {
-  const [todos, setTodos] = useState([]);
-
-  const addTodo = (title) => {
-    setTodos((pr) => [
-      ...pr,
-      {
-        id: Date.now().toString(),
-        title,
-      },
+    const [todos, setTodos] = useState([
+        // { id: 1, title: "test" },
+        // { id: 2, title: "test" },
+        // { id: 3, title: "test" },
+        // { id: 4, title: "test" },
+        // { id: 5, title: "test" },
+        // { id: 6, title: "test" },
+        // { id: 7, title: "test" },
+        // { id: 8, title: "test" },
+        // { id: 9, title: "test" },
+        // { id: 10, title: "test" },
+        // { id: 11, title: "test" },
+        // { id: 12, title: "test" },
+        // { id: 13, title: "test" },
+        // { id: 14, title: "test" },
     ]);
-  };
 
-  return (
-    <View>
-      <Navbar title="Todo App" />
-      <View style={styles.container}>
-        <AddTodo onSubmit={addTodo}/>
+    const addTodo = (title) => {
+        setTodos((pr) => [
+            ...pr,
+            {
+                id: Date.now().toString(),
+                title,
+            },
+        ]);
+    };
+
+    const removeTodo = (id) => {
+        setTodos(prev => prev.filter(todo => todo.id !== id));
+    }
+
+    return (
         <View>
-          { todos.map(todo => {
-            return <Text key={todo.id}>{todo.title}</Text>
-          }) }
+            <Navbar title="Todo App" />
+            <View style={styles.container}>
+                <AddTodo onSubmit={addTodo}/>
+                <FlatList
+                    data={todos}
+                    renderItem={({ item }) => <Todo todo={item} onRemove={removeTodo}/>}
+                    keyExtractor={(item) => item.id.toString()}
+                />
+            </View>
         </View>
-      </View>
-    </View>
-  );
+    );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: 30,
-    paddingVertical: 20,
-  },
+    container: {
+        paddingHorizontal: 30,
+        paddingVertical: 20,
+    },
 });
