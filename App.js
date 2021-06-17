@@ -1,25 +1,14 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View, FlatList } from "react-native";
-import { Navbar } from "./src/Navbar";
-import { AddTodo } from "./src/AddTodo";
-import { Todo } from "./src/Todo";
+import { Navbar } from "./src/components/Navbar";
+import MainScreen from "./src/screens/MainScreen";
+import TodoScreen from "./src/screens/TodoScreen";
 
 export default function App() {
+    const [todoId, setTodoId] = useState(null);
     const [todos, setTodos] = useState([
-        // { id: 1, title: "test" },
-        // { id: 2, title: "test" },
-        // { id: 3, title: "test" },
-        // { id: 4, title: "test" },
-        // { id: 5, title: "test" },
-        // { id: 6, title: "test" },
-        // { id: 7, title: "test" },
-        // { id: 8, title: "test" },
-        // { id: 9, title: "test" },
-        // { id: 10, title: "test" },
-        // { id: 11, title: "test" },
-        // { id: 12, title: "test" },
-        // { id: 13, title: "test" },
-        // { id: 14, title: "test" },
+        { id: '1', title: "Выучить react native" },
+        { id: '2', title: "Выучить Vue" },
     ]);
 
     const addTodo = (title) => {
@@ -33,20 +22,27 @@ export default function App() {
     };
 
     const removeTodo = (id) => {
-        setTodos(prev => prev.filter(todo => todo.id !== id));
+        setTodos((prev) => prev.filter((todo) => todo.id !== id));
+    };
+
+    let content = (
+        <MainScreen
+            todos={todos}
+            addTodo={addTodo}
+            removeTodo={removeTodo}
+            openTodo={setTodoId}
+        />
+    );
+
+    if (todoId) {
+        const selectedTodo = todos.find(todo => todo.id === todoId);
+        content = <TodoScreen goBack={() => setTodoId(null)} todo={selectedTodo}/>;
     }
 
     return (
         <View>
             <Navbar title="Todo App" />
-            <View style={styles.container}>
-                <AddTodo onSubmit={addTodo}/>
-                <FlatList
-                    data={todos}
-                    renderItem={({ item }) => <Todo todo={item} onRemove={removeTodo}/>}
-                    keyExtractor={(item) => item.id.toString()}
-                />
-            </View>
+            <View style={styles.container}>{content}</View>
         </View>
     );
 }
