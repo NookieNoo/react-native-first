@@ -1,14 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, Text, View, Button } from "react-native";
 import { THEME } from "../theme";
 import AppCard from "../components/ui/AppCard";
+import EditModal from "../components/EditModal";
 
-export default function TodoScreen({ goBack, todo, onRemove }) {
+export default function TodoScreen({ goBack, todo, onRemove, onSave }) {
+    const [modal, setModal] = useState(false);
+
+    const saveHandler = (title) => {
+        onSave(todo.id, title);
+        setModal(false);
+    };
+
     return (
         <View>
+            <EditModal
+                value={todo.title}
+                visible={modal}
+                onCancel={() => setModal(false)}
+                onSave={saveHandler}
+            />
             <AppCard style={styles.card}>
                 <Text style={styles.title}>{todo.title}</Text>
-                <Button title="Ред." />
+                <Button title="Ред." onPress={() => setModal(true)} />
             </AppCard>
             <View style={styles.buttons}>
                 <View style={styles.button}>
@@ -37,12 +51,12 @@ const styles = StyleSheet.create({
     },
     card: {
         marginBottom: 20,
-        padding: 15
+        padding: 15,
     },
     button: {
         width: "40%",
     },
     title: {
-        fontSize: 20
-    }
+        fontSize: 20,
+    },
 });
